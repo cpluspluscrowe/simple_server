@@ -4,19 +4,22 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 func main() {
 	mux := http.NewServeMux()
-
 	mh1 := &messageHandler{"Welcome to Go Web Development"}
 	mux.Handle("/welcome", mh1)
 
-	mh2 := &messageHandler{"net/http is awesome"}
-	mux.Handle("/message", mh2)
-
+	server := &http.Server{
+		Addr:           ":8080",
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
 	log.Println("Listening...")
-	http.ListenAndServe(":8080", mux)
+	server.ListenAndServe()
 }
 
 type messageHandler struct {
