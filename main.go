@@ -27,7 +27,14 @@ func loadPage(title string) (*Page, error) {
 	return &Page{Title: title, Body: body}, nil
 }
 
+func handler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
+}
+
 func main() {
+	http.HandleFunc("/", handler)
+	log.Fatal(http.ListenAndServe(":8080", nil))
+
 	p1 := &Page{Title: "TestPage", Body: []byte("This is a sample Page.")}
 	p1.save()
 	p2, _ := loadPage("TestPage")
